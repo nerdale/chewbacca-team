@@ -34,6 +34,11 @@ const add = (event) => {
 	var cont = document.getElementById('contenedor');
 	// referencia al nodo raiz de la base de datos
 	var databaseRef = firebase.database().ref().child('comentarios');	
+	databaseRef.push({
+		comment: document.getElementById('comment').value
+		//event.target.comment.value
+	})
+
 	var comment = document.getElementById('comment').value;
 	document.getElementById('comment').value = '';
 	
@@ -42,10 +47,6 @@ const add = (event) => {
 		return false;
 	}
 
-	databaseRef.push({
-		comment: document.getElementById('comment').value
-		//event.target.comment.value
-	})
 
 
 	cont.innerHTML += `<div class="card"><div class="row"><div class="col-xs-3"><a href="#profile" title="Profile"><img src="img/grumpy.jpg" class="img-circle img-user" alt="User"></a></div><div class="col-xs-9"><div class="comment"><h5><a href="#profile" title="Profile">Grumpy:</a></h5><p>${comment}</p><div><i class="fas fa-heart"></i></div></div></div></div></div>`
