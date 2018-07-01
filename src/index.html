@@ -1,11 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Social Network</title>
-  <link rel="stylesheet" href="style.css" />
+	<meta name = "viewport" content="width=device-width">
+	<meta charset="UTF-8">
+	<title>Social Network</title>
+	<link href="https://fonts.googleapis.com/css?family=Oswald:300,700" rel="stylesheet">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/main.css">
 </head>
-<body>
+<body> 
+<!-- MENU NAV -->
+	<header>
+		<nav class="navbar-default">
+			<div class="container">
+				<h1 class="text-center title-social">Social Network</h1>
+			</div>
+		</nav>
+	</header>
 
+	<section class="container text-center" id="log">
+		<div class="row">
+			<div class="col-xs-12">
+					<h3 class="title-social login">Login</h3>
+			</div>	
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+					<button type="button" class="btn btn-primary">Sign in with Facebook</button>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+					<button type="button" class="btn btn-danger" onclick="googleSignIn()">Sign in with Google</button>
+			</div>
+		</div>
+	</section>
+	<div id="root"></div>
+
+	<!-- Scripts -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.2.0/firebase.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/route.js"></script>
+	<script src="js/router.js"></script>
+	<script src="js/app.js"></script>
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+	<script src="js/script.js"></script>
 </body>
 </html>

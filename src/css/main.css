@@ -1,0 +1,104 @@
+/* Login view */
+body {
+	background-color: #ECF1F5;
+}
+
+.navbar-default {
+	background-color: #4F5567;
+	box-shadow: 0px 1px 16px -6px rgba(0,0,0,1);
+}
+
+.title-social {
+	color: #FFF;
+	font-family: 'Oswald', sans-serif;
+	font-weight: 700;
+}
+
+.login {
+	color: #4F5567;
+	margin-top: 4em;
+}
+
+.btn {
+	width: 200px;
+	margin-top: 2em;
+}
+
+
+/* Comments */
+
+.card {
+	background: #ffffff;
+	padding: 15px;
+	display: block;
+	overflow: hidden;
+	margin: 3em 0;
+}
+
+.img-user {
+	max-width: 80px;
+	min-width: 40px;	
+}
+
+.img-circle {
+	border-radius: 50%;
+}
+
+.comment {
+	padding-left: 2em;
+}
+
+p {
+	color: #4E4D53;
+}
+
+.fa-heart {
+	color: #4E4D53;
+}
+
+textarea {
+	width: 100%;
+	height: 100px;
+	color: #4E4D53;
+	font-size: 15px;
+	padding: 10px;
+	border: 0px;
+	margin: 2em 0;
+	overflow: scroll;
+	overflow-x: hidden;
+}
+
+#btn-add{
+	background-color: #4F5567;	
+	border: 0px;
+	cursor: pointer;
+	box-shadow: 0px 1px 15px -6px rgba(0,0,0,1);
+	text-align: center;
+	margin-bottom: 20px;
+	width: 130px;
+}
+
+#btn-add:hover{
+	background-color: #6B748E; 
+}
+
+#btn-add:focus {
+	outline: 0;
+}
+
+.grumpy{
+	width: 100px;
+	border-radius: 100px;
+	box-shadow: 0px 1px 24px -6px rgba(0,0,0,1);
+}
+
+.fa-heart{
+	float: right;
+}
+
+
+/* Profile */
+
+.profile-img {
+	width: 50%;
+}
