@@ -15,11 +15,11 @@ const googleSignIn = () => {
 	firebase.auth().signInWithPopup(base_provider).then(result => {
 		console.log(result);
 		console.log('Succes... Google Account Linked');
+		showComment();
 		
 	}).catch(err => {
 		console.log(err);
 		console.log('Failed to do');
-		showComment();
 	})
 }
 
