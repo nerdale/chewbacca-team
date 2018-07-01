@@ -13,9 +13,10 @@ window.onload = () => {
 const googleSignIn = () => {
 	base_provider = new firebase.auth.GoogleAuthProvider();
 	firebase.auth().signInWithPopup(base_provider).then(result => {
-		console.log(result);
+		let resultJson = result.json()
+		console.log(resultJson);
 		console.log('Succes... Google Account Linked');
-		showComment(result);
+		showComment(resultJson);
 		
 	}).catch(err => {
 		console.log(err);
@@ -24,7 +25,7 @@ const googleSignIn = () => {
 }
 
 
-const showComment = (result) => {
+const showComment = (resultJson) => {
 	const container = document.getElementById('root');
 	document.getElementById('log').style.display = 'none';
 	container.innerHTML = `	<section><h2>Hello ${additionalUserInfo.profile.name}</h2><div class="container-fluid"><div id="contenedor"></div><div class="row"><div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><div class="form-group text-center"><textarea class="txt" id="comment" placeholder="Comment..."></textarea><button type="button" class="btn btn-primary pull-right" id="btn-add" onclick="add()"><i class="fas fa-plus"></i> Add comment</button></div></div></div></div></section>`
