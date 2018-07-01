@@ -43,7 +43,7 @@ const add = (event) => {
 	}
 
 	databaseRef.push({
-		comment: event.target.comment.value
+		comment: document.getElementById('comment').value
 		//event.target.comment.value
 	})
 
