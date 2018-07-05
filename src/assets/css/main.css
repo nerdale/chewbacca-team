@@ -71,7 +71,7 @@ textarea {
 	overflow-x: hidden;
 }
 
-#btn-add{
+#btn-add, #btn-image{
 	background-color: #4F5567;	
 	border: 0px;
 	cursor: pointer;
@@ -100,9 +100,17 @@ textarea {
 	margin: .5em;
 }
 
+#files {
+	visibility: hidden;
+}
+
 
 /* Profile */
 
 .profile-img {
 	width: 50%;
+}
+
+img {
+	width: 100%;
 }

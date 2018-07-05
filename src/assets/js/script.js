@@ -1,18 +1,19 @@
 const container = document.getElementById('root');
+const containerImage = document.getElementById('contenedor-img');
 const containerLogin = document.getElementById('log');
+const create = 'Add Comment';
+const edit = 'Edit';
+let mood = create;
 let referenceCommentToEdit;
-const CREATE = 'Add Comment';
-const UPDATE = 'Edit';
-let mood = CREATE;
 
 window.onload = () => {
-	// inicializo firebase
+	// firebase
 	var config = {
     apiKey: "AIzaSyB5VGUJtLOPuyrYmVKXNOO9JWw5sNhRX6k",
     authDomain: "socialnetwork-79af6.firebaseapp.com",
     databaseURL: "https://socialnetwork-79af6.firebaseio.com",
     projectId: "socialnetwork-79af6",
-    storageBucket: "",
+    storageBucket: "socialnetwork-79af6.appspot.com",
     messagingSenderId: "723320283252"
   };
 	firebase.initializeApp(config);
@@ -35,6 +36,7 @@ window.onload = () => {
 	document.getElementById('botonlogout').addEventListener('click', (event) => {
 		firebase.auth().signOut();
 		container.innerHTML = ''; // se limpia div con los comentarios
+		containerImage.innerHTML = ''; // limpia div imagen
 		containerLogin.style.display = 'block'; // re aparece botón login
 	});
 	
@@ -47,6 +49,7 @@ window.onload = () => {
 			showComment(user);
 			show();
 			add();
+			mostrarImagenesFirebase();
 		} else {
 			document.getElementById('botonlogin').style.display = 'block'
 			document.getElementById('botonlogout').style.display = 'none';
@@ -58,7 +61,10 @@ window.onload = () => {
 const showComment = (user) => {
 	console.log(user.displayName)
 	containerLogin.style.display = 'none';
-	container.innerHTML += `<section><h2>${user.displayName}</h2><div class="container-fluid"><div id="contenedor">}</div><div class="row"><div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><div class="form-group text-center"><textarea class="txt" id="comment" placeholder="Comment..."></textarea><button type="button" class="btn btn-primary pull-right" id="btn-add" onclick="add()">Add comment</button></div></div></div></div></section>`
+	container.innerHTML += `<section><div class="container-fluid"><h5>Bienvenid@: ${user.displayName}</h5><div id="contenedor"></div><div class="row"><div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><div class="form-group text-center"><textarea class="txt" id="comment" placeholder="Comment..."></textarea><button type="button" class="btn btn-primary pull-right" id="btn-add">Add comment</button><div><label for="files" class="btn btn-primary" id="btn-image">Select Image</label> <input id="files" type="file"></div></div></div></div></div></section>`
+
+	document.getElementById('btn-add').addEventListener('click', add);
+	document.getElementById('files').addEventListener('change', upload, false);
 };
 
 // agrega comentario firebase
@@ -71,21 +77,22 @@ const add = (event) => {
 	}
 	// referencia al nodo raiz de la base de datos (comentarios) para crearle hijos
 	const databaseRef = firebase.database().ref().child('comentarios');
-	if (mood === CREATE){
+	if (mood === create){
 		// agrega comentarios a database firebase
 		databaseRef.push({
 			comment: document.getElementById('comment').value
 		});
 	}
-	if (mood === UPDATE) {
+	if (mood === edit) {
 		referenceCommentToEdit.update({
 			comment: document.getElementById('comment').value
 		})
 	}
 	
 	document.getElementById('comment').value = '';
-	document.getElementById('btn-add').textContent = CREATE;
+	document.getElementById('btn-add').textContent = create;
 	show();
+
 };
 
 // crear comentario y agrega en html
@@ -123,8 +130,8 @@ const editComment = () => {
 		document.getElementById('comment').value = snap.val().comment;
 	});
 	console.log(document.getElementById('btn-add').textContent)
-	document.getElementById('btn-add').textContent = UPDATE;
-	mood = UPDATE;
+	document.getElementById('btn-add').textContent = edit;
+	mood = edit;
 }
 
 // borrar comentarios
@@ -132,4 +139,45 @@ const deleteComment = () => {
 	var keyCommentToDelete = event.target.getAttribute('data-comment');
 	var referenceCommentToDelete = firebase.database().ref().child('comentarios').child(keyCommentToDelete);
 	referenceCommentToDelete.remove();
+}
+
+// subir imagenes
+
+
+const upload = () => {
+	var imagenASubir = document.getElementById('files').files[0];
+	var imagenesStorageRef = firebase.storage().ref();
+	var uploadTask = imagenesStorageRef.child('imagenes/' + imagenASubir.name).put(imagenASubir);
+
+	uploadTask.on('state_changed', function(snapshot){
+		// progreso de la subida
+	}, function(error) {
+		// gestionar error
+	}, function() {
+		// cuando se ha subido todo ok
+		uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+			console.log(downloadURL);
+			crearNodoEnBDFirebase(imagenASubir.name, downloadURL);
+		});
+	});
+}
+
+const mostrarImagenesFirebase = () => {
+	var imagenesFBRef = firebase.database().ref().child('imagenesFB');
+	imagenesFBRef.on('value', function(snapshot){
+		var datos = snapshot.val();
+		var result = '';
+		for (let key in datos) {
+			result += `<div class="card"><div class="row"><div class="col-xs-3"><a href="#profile" title="Profile"><img src="static/img/grumpy.jpg" class="img-circle img-user" alt="User"></a></div><div class="col-xs-9"><div class="comment"><h5><a href="#profile" title="Profile">Grumpy:</a></h5><img src="${datos[key].url}"/><div><i class="fas fa-heart"></i></div></div></div></div></div>`
+		}
+		containerImage.innerHTML += result;
+	})
+}
+
+const crearNodoEnBDFirebase = (nombreImagen, downloadURL) => {
+	var imagenesFBRef = firebase.database().ref().child('imagenesFB');
+	imagenesFBRef.push({
+		nombre: nombreImagen,
+		url: downloadURL
+	})
 }
