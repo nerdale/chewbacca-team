@@ -1,6 +1,7 @@
 const container = document.getElementById('root');
 const containerImage = document.getElementById('contenedor-img');
 const containerLogin = document.getElementById('log');
+const botonLogin = document.getElementById('botonlogin');
 const create = 'Add Comment';
 const edit = 'Edit';
 let mood = create;
@@ -9,26 +10,26 @@ let referenceCommentToEdit;
 window.onload = () => {
 	// firebase
 	var config = {
-    apiKey: "AIzaSyB5VGUJtLOPuyrYmVKXNOO9JWw5sNhRX6k",
-    authDomain: "socialnetwork-79af6.firebaseapp.com",
-    databaseURL: "https://socialnetwork-79af6.firebaseio.com",
-    projectId: "socialnetwork-79af6",
-    storageBucket: "socialnetwork-79af6.appspot.com",
-    messagingSenderId: "723320283252"
-  };
+		apiKey: "AIzaSyB5VGUJtLOPuyrYmVKXNOO9JWw5sNhRX6k",
+		authDomain: "socialnetwork-79af6.firebaseapp.com",
+		databaseURL: "https://socialnetwork-79af6.firebaseio.com",
+		projectId: "socialnetwork-79af6",
+		storageBucket: "socialnetwork-79af6.appspot.com",
+		messagingSenderId: "723320283252"
+	};
 	firebase.initializeApp(config);
-
+	
 	// iniciar sesión con google firebase al clickear botón
-	document.getElementById('botonlogin').addEventListener('click', (event) => { 
-		let base_provider = new firebase.auth.GoogleAuthProvider();
-		base_provider.addScope('email');
-		firebase.auth().signInWithPopup(base_provider)
+	botonLogin.addEventListener('click', (event) => { 
+		let baseProvider = new firebase.auth.GoogleAuthProvider();
+		baseProvider.addScope('email');
+		firebase.auth().signInWithPopup(baseProvider)
 		.then(result => {
 			console.log(result);
-			console.log('Succes... Google Account Linked ', result.additionalUserInfo.profile.name);
+			console.log('Succes... ', result.additionalUserInfo.profile.name);
 		}).catch(err => {
 			console.log(err);
-			console.log('Failed to do ', err);
+			console.log('Failed... ', err);
 		})
 	})
 	
@@ -44,33 +45,32 @@ window.onload = () => {
 	firebase.auth().onAuthStateChanged((user) => {
 		if (user) {
 			//console.log('AuthStateChanged', user);
-			document.getElementById('botonlogin').style.display = 'none'
+			botonLogin.style.display = 'none'
 			document.getElementById('botonlogout').style.display = 'block';
-			showComment(user);
-			show();
-			add();
+			createTextArea(user);
+			show(user);
+			//add();
 			mostrarImagenesFirebase();
 		} else {
-			document.getElementById('botonlogin').style.display = 'block'
+			botonLogin.style.display = 'block'
 			document.getElementById('botonlogout').style.display = 'none';
 		}
 	});
 }
 
 // mostrar textarea para agregar comentario
-const showComment = (user) => {
+const createTextArea = (user) => {
 	console.log(user.displayName)
 	containerLogin.style.display = 'none';
 	container.innerHTML += `<section><div class="container-fluid"><h5>Bienvenid@: ${user.displayName}</h5><div id="contenedor"></div><div class="row"><div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><div class="form-group text-center"><textarea class="txt" id="comment" placeholder="Comment..."></textarea><button type="button" class="btn btn-primary pull-right" id="btn-add">Add comment</button><div><label for="files" class="btn btn-primary" id="btn-image">Select Image</label> <input id="files" type="file"></div></div></div></div></div></section>`
-
+	
 	document.getElementById('btn-add').addEventListener('click', add);
-	document.getElementById('files').addEventListener('change', upload, false);
+	document.getElementById('files').addEventListener('change', upload);
 };
 
 // agrega comentario firebase
 const add = (event) => {
 	// muestra los comentarios guardados en firebase
-	
 	if (document.getElementById('comment').value.length === 0) {
 		console.log('mensaje vacio')
 		return;
@@ -91,12 +91,10 @@ const add = (event) => {
 	
 	document.getElementById('comment').value = '';
 	document.getElementById('btn-add').textContent = create;
-	show();
-
 };
 
 // crear comentario y agrega en html
-const show = () => {
+const show = (user) => {
 	const containerComment = document.getElementById('contenedor');
 	firebase.database().ref().child('comentarios').on('value', (snap) => {
 		var datos = snap.val();
@@ -112,7 +110,7 @@ const show = () => {
 			for (let i = 0; i < elementsToEdit.length; i ++) {
 				elementsToEdit[i].addEventListener('click', editComment);
 			}
-
+			
 			const elementsToDelete = document.getElementsByClassName('delete');
 			for (let i = 0; i < elementsToDelete.length; i ++) {
 				elementsToDelete[i].addEventListener('click', deleteComment);
@@ -148,7 +146,7 @@ const upload = () => {
 	var imagenASubir = document.getElementById('files').files[0];
 	var imagenesStorageRef = firebase.storage().ref();
 	var uploadTask = imagenesStorageRef.child('imagenes/' + imagenASubir.name).put(imagenASubir);
-
+	
 	uploadTask.on('state_changed', function(snapshot){
 		// progreso de la subida
 	}, function(error) {
